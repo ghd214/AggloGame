@@ -1,0 +1,27 @@
+{
+  "name": "Agglo2",
+  "version": "0.0.0",
+  "authors": [
+    "Kyler Berry <kyler.berry@gmail.com>"
+  ],
+  "description": "Javascript Collision Game",
+  "main": "game.js",
+  "keywords": [
+    "collision",
+    "javascript",
+    "paper",
+    "game",
+    "touch"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "paper": "~0.9.21"
+  }
+}

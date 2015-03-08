@@ -1,0 +1,30 @@
+{
+  "name": "Agglo2",
+  "version": "1.0.0",
+  "description": "Javascript Collision Game",
+  "main": "Gruntfile.js",
+  "dependencies": {
+    "grunt": "^0.4.5",
+    "grunt-cli": "^0.1.13",
+    "grunt-contrib-concat": "^0.5.1",
+    "grunt-contrib-jshint": "^0.11.0",
+    "grunt-contrib-uglify": "^0.8.0",
+    "grunt-contrib-watch": "^0.6.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "agglo"
+  },
+  "keywords": [
+    "collision",
+    "html5",
+    "paper",
+    "game"
+  ],
+  "author": "Kyler Berry",
+  "license": "MIT"
+}
