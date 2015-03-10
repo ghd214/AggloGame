@@ -1,6 +1,4 @@
 /*EXPANDERS*/
-//@todo move expanders into class
-//@todo make expanders respect boundaries
 //@todo expanders *pop* when hit by bullet
 //@todo expanders respect dropped balls
 
