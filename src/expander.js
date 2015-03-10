@@ -3,7 +3,7 @@ function Expander(event) {
 	this.point = event.point;
 	this.posX = this.point.x;
 	this.posY = this.point.y;
-	this.growScale = 1.03;
+	this.baseScale = 1;
 	this.shrinkScale = 0.95;
 
 	this.expander = new Path.Circle({
@@ -22,15 +22,14 @@ Expander.prototype = {
 	},
 	checkBorders: function() {
 		size = view.size;
-		var boundsX = this.expander.bounds.x,
-			boundsY = this.expander.bounds.y;
+		var bounds = this.expander.bounds;
 
 		//check that expander is within the bounds of the screen
 		//1px buffer to reduce jitter
-		if(boundsX > 1 && boundsY > 1 && boundsX + this.expander.bounds.width < size.width-1 && boundsY + this.expander.bounds.height < size.height-1) {
+		if(bounds.x > 1 && bounds.y > 1 && bounds.x + bounds.width < size.width-1 && bounds.y + this.expander.bounds.height < size.height-1) {
 			this.expand();
 		}
-		else if(boundsX < 0 || boundsY < 0 || boundsX + this.expander.bounds.width > size.width || boundsY + this.expander.bounds.height > size.height) {
+		else if(bounds.x < 0 || bounds.y < 0 || bounds.x + bounds.width > size.width || bounds.y + this.expander.bounds.height > size.height) {
 			this.reduce();
 		}
 	},
@@ -41,7 +40,10 @@ Expander.prototype = {
 
 	},
 	expand: function() {
-		this.expander.scale(this.growScale);
+		//scale is inverse size
+		var radius = this.expander.bounds.width / 2,
+			scale = this.baseScale + (this.baseScale / radius);
+		this.expander.scale(scale);
 	},
 	reduce: function() {
 		this.expander.scale(this.shrinkScale);
