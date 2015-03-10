@@ -1,4 +1,4 @@
-*Agglo*
+**Agglo**
 
 This is a fun project to learn [paper.js](http://paperjs.org/ "paper.js") and simple 2D game mechanics.
 
@@ -16,8 +16,8 @@ Right now there are 3 Classes.
 ***TO-DO's***
 
 _Expanders_
-- reduce jitter when expander is large and touching boundary
 - detect collision with a bullet
 - create a 'pop' animation on collision and destroy expander instance
 - on mouse release, add expander to Balls array and inherit ball properties (gravity, methods, bounce, etc.)
 - Expanders collide with dropped Balls and reduce or expand accordingly. (much like hitting the view boundary)
+- turn Bullets and Balls into Paper.Symbols and Paper.Groups of symbols 
