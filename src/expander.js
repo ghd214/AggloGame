@@ -42,9 +42,11 @@ Expander.prototype.checkBorders = function() {
 /**
 * check collisions between bullets and balls
 */
-Expander.prototype.checkCollisions = function() {
-
-};
+/*Expander.prototype.checkCollisions = function() {
+	bullets.forEach(function(bullet){
+		if()
+	});
+};*/
 
 /**
 * pop animation when bullet hits expander

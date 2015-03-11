@@ -13,17 +13,23 @@ function Bullet() {
   });
 
 
-  this.circle = new Path.Circle({
+  this.bullet = new Path.Circle({
     x: this.point.x,
     y: this.point.y
   }, this.radius);
-  this.circle.fillColor = 'red';
+  this.bullet.fillColor = 'red';
 }
 
 Bullet.prototype = {
-  iterate: function() {
+  iterate: function(item) {
     this.checkBorders();
     this.move();
+    //check if this bullet intersects the item
+    if(item !== null) {
+      if(this.bulletHit(item)) {
+        //emit bullet hit event
+      }
+    }
   },
   checkBorders: function() {
     size = view.size;
@@ -49,9 +55,12 @@ Bullet.prototype = {
     this.point.x += this.vector.x;
     this.point.y += this.vector.y;
 
-    this.circle.position = {
+    this.bullet.position = {
       x:this.point.x,
       y:this.point.y
     };
+  },
+  bulletHit: function(item) {
+    return this.bullet.intersects(item.expander);
   }
 };

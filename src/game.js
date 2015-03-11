@@ -31,22 +31,19 @@ var Agglo = (function(){
 			 	view.setViewSize(view.size.width, view.size.width/2);
 			},
 			onMouseDown = function(event) {
-		 		console.log('You pressed the mouse!');
 		 		expander = new Expander(event);
 			},
 			onMouseDrag = function(event) {
-			 	console.log('dragging...');
 			 	expander.point = event.point;
 			},
 			onMouseUp = function(event) {
-			 	console.log('You released the mouse!');
-			 	//add expander to ball array
 			 	expander = null;
 			},
 			onFrame = function() {
 				for(var i = bullets.length-1; i >= 0; i--) {
-					bullets[i].iterate();
+					bullets[i].iterate(expander);
 				}
+
 
 				if(expander) {
 					expander.iterate();
