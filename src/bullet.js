@@ -1,34 +1,39 @@
 function Bullet() {
-  var size = view.size,
-      speed = 3;
-
-  this.radius = 3;
   this.point = Point.random();
-  this.point.x = this.point.x * size.width;
-  this.point.y = this.point.y * size.height;
+  this.point.x = this.point.x * view.size.width;
+  this.point.y = this.point.y * view.size.height;
 
   this.vector = new Point({
     angle: 360 * Math.random(),
-    length: speed
+    length: this.speed
   });
 
   this.bullet = new Path.Circle({
     x: this.point.x,
     y: this.point.y
   }, this.radius);
-  // this.bullet.fillColor = 'red';
-  this.bullet.fillColor = '#eee';
+  this.bullet.fillColor = 'red';
 }
 
 Bullet.prototype = {
-  iterate: function(item) {
+  speed: 3,
+  radius: 3
+};
+
+/**
+* Runs every onFrame event
+*/
+Bullet.prototype.iterate = function(item) {
     this.checkBorders();
     this.move();
     //check if this bullet intersects the item
     return item !== null ? this.bulletHit(item) : false;
+};
 
-  },
-  checkBorders: function() {
+/**
+* Checks for a border collision
+*/
+Bullet.prototype.checkBorders = function() {
     size = view.size;
 
     if(this.point.x < this.radius) {
@@ -47,8 +52,12 @@ Bullet.prototype = {
       this.point.y = size.height - this.radius;
       this.vector.y = -this.vector.y;
     }
-  },
-  move: function() {
+};
+
+/**
+* Moves via vector
+*/
+Bullet.prototype.move = function() {
     this.point.x += this.vector.x;
     this.point.y += this.vector.y;
 
@@ -56,8 +65,12 @@ Bullet.prototype = {
       x:this.point.x,
       y:this.point.y
     };
-  },
-  bulletHit: function(item) {
+};
+
+
+/**
+* Checks for a hit on an expander
+*/
+Bullet.prototype.bulletHit = function(item) {
     return this.bullet.intersects(item.expander);
-  }
 };

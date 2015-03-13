@@ -60,33 +60,41 @@ Expander.prototype = {
 		};
 	}*/
 };;function Bullet() {
-  var size = view.size,
-    speed = 4;
-
-  this.radius = 4;
   this.point = Point.random();
-  this.point.x = this.point.x * size.width;
-  this.point.y = this.point.y * size.height;
+  this.point.x = this.point.x * view.size.width;
+  this.point.y = this.point.y * view.size.height;
 
   this.vector = new Point({
     angle: 360 * Math.random(),
-    length: speed
+    length: this.speed
   });
 
-
-  this.circle = new Path.Circle({
+  this.bullet = new Path.Circle({
     x: this.point.x,
     y: this.point.y
   }, this.radius);
-  this.circle.fillColor = 'red';
+  this.bullet.fillColor = 'red';
 }
 
 Bullet.prototype = {
-  iterate: function() {
+  speed: 3,
+  radius: 3
+};
+
+/**
+* Runs every onFrame event
+*/
+Bullet.prototype.iterate = function(item) {
     this.checkBorders();
     this.move();
-  },
-  checkBorders: function() {
+    //check if this bullet intersects the item
+    return item !== null ? this.bulletHit(item) : false;
+};
+
+/**
+* Checks for a border collision
+*/
+Bullet.prototype.checkBorders = function() {
     size = view.size;
 
     if(this.point.x < this.radius) {
@@ -105,23 +113,36 @@ Bullet.prototype = {
       this.point.y = size.height - this.radius;
       this.vector.y = -this.vector.y;
     }
-  },
-  move: function() {
+};
+
+/**
+* Moves via vector
+*/
+Bullet.prototype.move = function() {
     this.point.x += this.vector.x;
     this.point.y += this.vector.y;
 
-    this.circle.position = {
+    this.bullet.position = {
       x:this.point.x,
       y:this.point.y
     };
-  }
+};
+
+
+/**
+* Checks for a hit on an expander
+*/
+Bullet.prototype.bulletHit = function(item) {
+    return this.bullet.intersects(item.expander);
 };;function Expander(event) {
 	this.point = event.point;
 	this.expander = new Path.Circle({
 					x: this.point.x,
 					y: this.point.y
 				}, this.initialWidth);
-	this.expander.fillColor = '#7fddc0';
+	//this.expander.fillColor = '#7fddc0';
+	this.expander.strokeColor = '#eee';
+	this.expander.strokeWidth = 1;
 }
 
 Expander.prototype = {
@@ -148,10 +169,10 @@ Expander.prototype.checkBorders = function() {
 		bounds = this.expander.bounds;
 
 	//1px buffer to reduce jitter
-	if(bounds.x > 1 && bounds.y > 1 && bounds.x + bounds.width < size.width-1 && bounds.y + this.expander.bounds.height < size.height-1) {
+	if(bounds.x > 1 && bounds.y > 1 && bounds.x + bounds.width < size.width-1 && bounds.y + bounds.height < size.height-1) {
 		this.expand();
 	}
-	else if(bounds.x < 0 || bounds.y < 0 || bounds.x + bounds.width > size.width || bounds.y + this.expander.bounds.height > size.height) {
+	else if(bounds.x < 0 || bounds.y < 0 || bounds.x + bounds.width > size.width || bounds.y + bounds.height > size.height) {
 		this.reduce();
 	}
 };
@@ -159,9 +180,11 @@ Expander.prototype.checkBorders = function() {
 /**
 * check collisions between bullets and balls
 */
-Expander.prototype.checkCollisions = function() {
-
-};
+/*Expander.prototype.checkCollisions = function() {
+	bullets.forEach(function(bullet){
+		if()
+	});
+};*/
 
 /**
 * pop animation when bullet hits expander
@@ -208,8 +231,7 @@ Expander.prototype.move = function() {
 // @todo bullets bounce velocity has tolerance that can make the bullet unweildy to track
 // @todo add powerups that are achieved by matching a circle shape shown on screen
 //		-slowdown, bullet remover, extra life, ball expanse multiplier
-//		-powerdowns: bullets speed up, bullets invisible, expander slow growth,
-// @todo
+//		-powerdowns: bullets speed up, bullets invisible, expander slow growth
 
 var Agglo = (function(){
 
@@ -227,22 +249,24 @@ var Agglo = (function(){
 			 	view.setViewSize(view.size.width, view.size.width/2);
 			},
 			onMouseDown = function(event) {
-		 		console.log('You pressed the mouse!');
 		 		expander = new Expander(event);
 			},
 			onMouseDrag = function(event) {
-			 	console.log('dragging...');
-			 	expander.point = event.point;
+				if(expander) {
+					expander.point = event.point;
+				}
 			},
 			onMouseUp = function(event) {
-			 	console.log('You released the mouse!');
-			 	//add expander to ball array
 			 	expander = null;
 			},
 			onFrame = function() {
 				for(var i = bullets.length-1; i >= 0; i--) {
-					bullets[i].iterate();
+					if(bullets[i].iterate(expander)) {
+						//kill the expander
+						expander = !expander.expander.remove();
+					}
 				}
+
 
 				if(expander) {
 					expander.iterate();
@@ -268,5 +292,5 @@ var Agglo = (function(){
 }());
 
 window.onload = function() {
-	Agglo.run(5);
+	Agglo.run(2);
 };
