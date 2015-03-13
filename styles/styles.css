@@ -4,7 +4,8 @@
   margin: 0;
   width: 100%;
   min-width: 500px;
-  background:#eee;
+  background:#222;
+  border-bottom:1px solid #eee;
 }
 
 body {
