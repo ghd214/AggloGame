@@ -4,7 +4,9 @@ function Expander(event) {
 					x: this.point.x,
 					y: this.point.y
 				}, this.initialWidth);
-	this.expander.fillColor = '#7fddc0';
+	//this.expander.fillColor = '#7fddc0';
+	this.expander.strokeColor = '#eee';
+	this.expander.strokeWidth = 1;
 }
 
 Expander.prototype = {
@@ -31,10 +33,10 @@ Expander.prototype.checkBorders = function() {
 		bounds = this.expander.bounds;
 
 	//1px buffer to reduce jitter
-	if(bounds.x > 1 && bounds.y > 1 && bounds.x + bounds.width < size.width-1 && bounds.y + this.expander.bounds.height < size.height-1) {
+	if(bounds.x > 1 && bounds.y > 1 && bounds.x + bounds.width < size.width-1 && bounds.y + bounds.height < size.height-1) {
 		this.expand();
 	}
-	else if(bounds.x < 0 || bounds.y < 0 || bounds.x + bounds.width > size.width || bounds.y + this.expander.bounds.height > size.height) {
+	else if(bounds.x < 0 || bounds.y < 0 || bounds.x + bounds.width > size.width || bounds.y + bounds.height > size.height) {
 		this.reduce();
 	}
 };

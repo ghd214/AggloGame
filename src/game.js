@@ -12,8 +12,7 @@
 // @todo bullets bounce velocity has tolerance that can make the bullet unweildy to track
 // @todo add powerups that are achieved by matching a circle shape shown on screen
 //		-slowdown, bullet remover, extra life, ball expanse multiplier
-//		-powerdowns: bullets speed up, bullets invisible, expander slow growth,
-// @todo
+//		-powerdowns: bullets speed up, bullets invisible, expander slow growth
 
 var Agglo = (function(){
 
@@ -34,14 +33,19 @@ var Agglo = (function(){
 		 		expander = new Expander(event);
 			},
 			onMouseDrag = function(event) {
-			 	expander.point = event.point;
+				if(expander) {
+					expander.point = event.point;
+				}
 			},
 			onMouseUp = function(event) {
 			 	expander = null;
 			},
 			onFrame = function() {
 				for(var i = bullets.length-1; i >= 0; i--) {
-					bullets[i].iterate(expander);
+					if(bullets[i].iterate(expander)) {
+						//kill the expander
+						expander = !expander.expander.remove();
+					}
 				}
 
 
@@ -69,5 +73,5 @@ var Agglo = (function(){
 }());
 
 window.onload = function() {
-	Agglo.run(5);
+	Agglo.run(2);
 };

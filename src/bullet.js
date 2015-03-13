@@ -1,8 +1,8 @@
 function Bullet() {
   var size = view.size,
-    speed = 4;
+      speed = 3;
 
-  this.radius = 4;
+  this.radius = 3;
   this.point = Point.random();
   this.point.x = this.point.x * size.width;
   this.point.y = this.point.y * size.height;
@@ -12,12 +12,12 @@ function Bullet() {
     length: speed
   });
 
-
   this.bullet = new Path.Circle({
     x: this.point.x,
     y: this.point.y
   }, this.radius);
-  this.bullet.fillColor = 'red';
+  // this.bullet.fillColor = 'red';
+  this.bullet.fillColor = '#eee';
 }
 
 Bullet.prototype = {
@@ -25,11 +25,8 @@ Bullet.prototype = {
     this.checkBorders();
     this.move();
     //check if this bullet intersects the item
-    if(item !== null) {
-      if(this.bulletHit(item)) {
-        //emit bullet hit event
-      }
-    }
+    return item !== null ? this.bulletHit(item) : false;
+
   },
   checkBorders: function() {
     size = view.size;
