@@ -15,9 +15,14 @@ Right now there are 3 Classes.
 
 ***TO-DO's***
 
+_General_
+- make a common class for Bullets, Expanders and Balls to share positions
+- make quadtree for more efficient collision detection
+- turn Bullets and Balls into Paper.Symbols and Paper.Groups of symbols
+- make speed, gravity, scale and size dependent on current canvas size
+
 _Expanders_
-- detect collision with a bullet
 - create a 'pop' animation on collision and destroy expander instance
 - on mouse release, add expander to Balls array and inherit ball properties (gravity, methods, bounce, etc.)
 - Expanders collide with dropped Balls and reduce or expand accordingly. (much like hitting the view boundary)
-- turn Bullets and Balls into Paper.Symbols and Paper.Groups of symbols 
+- if Expander.bounds is outside the view.bounds when dropped then adjust it's position to be inside
