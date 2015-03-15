@@ -1,3 +1,6 @@
+/*
+* Definition for Bullet class
+*/
 function Bullet() {
   this.point = Point.random();
   this.point.x *= view.size.width;
@@ -22,19 +25,12 @@ Bullet.prototype = {
 
 /**
 * Runs every onFrame event
+* @param xpr obj
+* @param balls arr
 */
-Bullet.prototype.iterate = function(item) {
-    var hitItem = {};
-
+Bullet.prototype.iterate = function() {
     this.checkBorders();
     this.move();
-
-    //check if this bullet intersects the item
-    if(item !== null) {
-      if(this.itemHit(item.expander)) {
-        item.expander.remove();
-      }
-    }
 };
 
 /**
@@ -77,6 +73,7 @@ Bullet.prototype.move = function() {
 
 /**
 * Checks for a hit on an expander or ball
+* @param item obj
 */
 Bullet.prototype.itemHit = function(item) {
     return this.bullet.intersects(item);

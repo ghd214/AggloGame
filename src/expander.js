@@ -1,3 +1,7 @@
+/*
+* class definition for Expander obj
+* @param event Event obj
+*/
 function Expander(event) {
 	this.mousePoint = event.point;
 

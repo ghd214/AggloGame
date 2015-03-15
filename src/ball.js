@@ -1,3 +1,7 @@
+/*
+* Definition for Ball class
+* @param expander obj
+*/
 function Ball(expander) {
 	var xpr = expander;
 

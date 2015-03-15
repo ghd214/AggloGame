@@ -1,3 +1,7 @@
+/*
+* Definition for Ball class
+* @param expander obj
+*/
 function Ball(expander) {
 	var xpr = expander;
 
@@ -42,7 +46,10 @@ Ball.prototype = {
 			y:this.point.y
 		};
 	}*/
-};;function Bullet() {
+};;/*
+* Definition for Bullet class
+*/
+function Bullet() {
   this.point = Point.random();
   this.point.x *= view.size.width;
   this.point.y *= view.size.height;
@@ -66,19 +73,12 @@ Bullet.prototype = {
 
 /**
 * Runs every onFrame event
+* @param xpr obj
+* @param balls arr
 */
-Bullet.prototype.iterate = function(item) {
-    var hitItem = {};
-
+Bullet.prototype.iterate = function() {
     this.checkBorders();
     this.move();
-
-    //check if this bullet intersects the item
-    if(item !== null) {
-      if(this.itemHit(item.expander)) {
-        item.expander.remove();
-      }
-    }
 };
 
 /**
@@ -121,10 +121,15 @@ Bullet.prototype.move = function() {
 
 /**
 * Checks for a hit on an expander or ball
+* @param item obj
 */
 Bullet.prototype.itemHit = function(item) {
     return this.bullet.intersects(item);
-};;function Expander(event) {
+};;/*
+* class definition for Expander obj
+* @param event Event obj
+*/
+function Expander(event) {
 	this.mousePoint = event.point;
 
 	this.expander = new Path.Circle({
@@ -243,7 +248,9 @@ var Agglo = (function(){
 		 		xpr = new Expander(event);
 			},
 			onMouseDrag = function(event) {
-				xpr.mousePoint = event.point;
+				if(xpr) {
+					xpr.mousePoint = event.point;
+				}
 			},
 			onMouseUp = function(event) {
 				//create new ball w/ current expander characteristics
@@ -255,19 +262,18 @@ var Agglo = (function(){
 			},
 			onFrame = function() {
 				//bullets
-				var collider = {};
 				for(var i = bullets.length-1; i >= 0; i--) {
-					bullets[i].iterate(xpr);
-					/*if(collider && collider.hit) {
-						//kill the expander
-						if(collider.expander) {
-							xpr = !xpr.expander.remove();
+					bullets[i].iterate();
+					if(xpr) {
+						if(bullets[i].itemHit(xpr.expander)) {
+							xpr.expander.remove();
+							xpr = null;
 						}
-					}*/
+					}
 				}
 
 				//balls
-				for(var b = balls.length-1; i>= 0; i--) {
+				for(var b = balls.length-1; b >= 0; b--) {
 					balls[b].iterate();
 				}
 

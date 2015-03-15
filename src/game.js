@@ -33,7 +33,9 @@ var Agglo = (function(){
 		 		xpr = new Expander(event);
 			},
 			onMouseDrag = function(event) {
-				xpr.mousePoint = event.point;
+				if(xpr) {
+					xpr.mousePoint = event.point;
+				}
 			},
 			onMouseUp = function(event) {
 				//create new ball w/ current expander characteristics
@@ -45,19 +47,18 @@ var Agglo = (function(){
 			},
 			onFrame = function() {
 				//bullets
-				var collider = {};
 				for(var i = bullets.length-1; i >= 0; i--) {
-					bullets[i].iterate(xpr);
-					/*if(collider && collider.hit) {
-						//kill the expander
-						if(collider.expander) {
-							xpr = !xpr.expander.remove();
+					bullets[i].iterate();
+					if(xpr) {
+						if(bullets[i].itemHit(xpr.expander)) {
+							xpr.expander.remove();
+							xpr = null;
 						}
-					}*/
+					}
 				}
 
 				//balls
-				for(var b = balls.length-1; i>= 0; i--) {
+				for(var b = balls.length-1; b >= 0; b--) {
 					balls[b].iterate();
 				}
 
