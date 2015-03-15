@@ -245,6 +245,7 @@ var Agglo = (function(){
 		    bullets = [],
 		    lvl = level || 1,
 		    expander = null,
+		    balls = [],
 		    resize = function(event) {
 			 	view.setViewSize(view.size.width, view.size.width/2);
 			},
@@ -257,9 +258,13 @@ var Agglo = (function(){
 				}
 			},
 			onMouseUp = function(event) {
+				//create new ball w/ current expander characteristics
+			 	balls.push(new Ball(expander));
+			 	expander.expander.remove();
 			 	expander = null;
 			},
 			onFrame = function() {
+				//bullets
 				for(var i = bullets.length-1; i >= 0; i--) {
 					if(bullets[i].iterate(expander)) {
 						//kill the expander
@@ -267,7 +272,12 @@ var Agglo = (function(){
 					}
 				}
 
+				//balls
+				for(var b = balls.length-1; i>= 0; i--) {
+					balls[b].iterate();
+				}
 
+				//expander
 				if(expander) {
 					expander.iterate();
 				}
