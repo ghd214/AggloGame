@@ -1,7 +1,7 @@
 function Bullet() {
   this.point = Point.random();
-  this.point.x = this.point.x * view.size.width;
-  this.point.y = this.point.y * view.size.height;
+  this.point.x *= view.size.width;
+  this.point.y *= view.size.height;
 
   this.vector = new Point({
     angle: 360 * Math.random(),
@@ -24,10 +24,17 @@ Bullet.prototype = {
 * Runs every onFrame event
 */
 Bullet.prototype.iterate = function(item) {
+    var hitItem = {};
+
     this.checkBorders();
     this.move();
+
     //check if this bullet intersects the item
-    return item !== null ? this.bulletHit(item) : false;
+    if(item !== null) {
+      if(this.itemHit(item.expander)) {
+        item.expander.remove();
+      }
+    }
 };
 
 /**
@@ -69,8 +76,8 @@ Bullet.prototype.move = function() {
 
 
 /**
-* Checks for a hit on an expander
+* Checks for a hit on an expander or ball
 */
-Bullet.prototype.bulletHit = function(item) {
-    return this.bullet.intersects(item.expander);
+Bullet.prototype.itemHit = function(item) {
+    return this.bullet.intersects(item);
 };

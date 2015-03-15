@@ -18,39 +18,42 @@ var Agglo = (function(){
 
 	this.init = function(level) {
 		paper.install(window);
-
 		paper.setup('game');
 
 		var tool = new Tool(),
 		    view = paper.project.view,
 		    bullets = [],
 		    lvl = level || 1,
-		    expander = null,
+		    xpr = null,
 		    balls = [],
 		    resize = function(event) {
 			 	view.setViewSize(view.size.width, view.size.width/2);
 			},
 			onMouseDown = function(event) {
-		 		expander = new Expander(event);
+		 		xpr = new Expander(event);
 			},
 			onMouseDrag = function(event) {
-				if(expander) {
-					expander.point = event.point;
-				}
+				xpr.mousePoint = event.point;
 			},
 			onMouseUp = function(event) {
 				//create new ball w/ current expander characteristics
-			 	balls.push(new Ball(expander));
-			 	expander.expander.remove();
-			 	expander = null;
+				if(xpr) {
+					balls.push(new Ball(xpr));
+				 	xpr.expander.remove();
+				 	xpr = null;
+				}
 			},
 			onFrame = function() {
 				//bullets
+				var collider = {};
 				for(var i = bullets.length-1; i >= 0; i--) {
-					if(bullets[i].iterate(expander)) {
+					bullets[i].iterate(xpr);
+					/*if(collider && collider.hit) {
 						//kill the expander
-						expander = !expander.expander.remove();
-					}
+						if(collider.expander) {
+							xpr = !xpr.expander.remove();
+						}
+					}*/
 				}
 
 				//balls
@@ -59,8 +62,8 @@ var Agglo = (function(){
 				}
 
 				//expander
-				if(expander) {
-					expander.iterate();
+				if(xpr) {
+					xpr.iterate();
 				}
 			};
 

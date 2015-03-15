@@ -1,9 +1,11 @@
 function Ball(expander) {
-  this.point = expander.point;
+	var xpr = expander;
+
+  this.point = xpr.mousePoint;
 	this.ball = new Path.Circle({
 					x: this.point.x,
 					y: this.point.y
-				}, expander.expander.bounds.width / 2);
+				}, xpr.expander.bounds.width / 2);
 	this.ball.strokeColor = '#eee';
 	this.ball.strokeWidth = 1;
 }

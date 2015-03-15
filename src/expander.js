@@ -1,8 +1,9 @@
 function Expander(event) {
-	this.point = event.point;
+	this.mousePoint = event.point;
+
 	this.expander = new Path.Circle({
-					x: this.point.x,
-					y: this.point.y
+					x: this.mousePoint.x,
+					y: this.mousePoint.y
 				}, this.initialWidth);
 	//this.expander.fillColor = '#7fddc0';
 	this.expander.strokeColor = '#eee';
@@ -79,5 +80,5 @@ Expander.prototype.reduce = function() {
 * @todo move mouseDrag method inside this class
 */
 Expander.prototype.move = function() {
-	this.expander.position = this.point;
+	this.expander.position = this.mousePoint;
 };
