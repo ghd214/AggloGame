@@ -60,6 +60,11 @@ var Agglo = (function(){
 				//balls
 				for(var b = balls.length-1; b >= 0; b--) {
 					balls[b].iterate();
+					for(var n = bullets.length-1; n >= 0; n--) {
+						if(bullets[n].itemHit(balls[b].ball)) {
+							bullets[n].updateVector(balls[b].ball);
+						}
+					}
 				}
 
 				//expander
