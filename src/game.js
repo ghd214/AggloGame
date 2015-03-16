@@ -62,7 +62,7 @@ var Agglo = (function(){
 					balls[b].iterate();
 					for(var n = bullets.length-1; n >= 0; n--) {
 						if(bullets[n].itemHit(balls[b].ball)) {
-							bullets[n].updateVector(balls[b].ball);
+							bullets[n].updateVector(balls[b]);
 						}
 					}
 				}

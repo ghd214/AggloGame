@@ -74,35 +74,9 @@ Bullet.prototype.move = function() {
 * can update bullet vector from outside object
 */
 Bullet.prototype.updateVector = function(ball) {
-/*    var angle = Math.atan2(ball.position.x - this.point.x, ball.position.y - this.point.y),
-        targetX = this.point.x + Math.cos(angle) * (this.radius + ball.bounds.width/2),
-        targetY = this.point.y + Math.sin(angle) * (this.radius + ball.bounds.width/2),
-        ax = (targetX - ball.position.x),
-        ay = (targetY - ball.position.y);
-
-        console.log('oldV = ' + this.vector.x + ':' + this.vector.y);
-        console.log('newV = ' + ax + ':' + ay);
-
-    this.vector.x -= ax/10;
-    this.vector.y -= ay/10;*/
-
-    this.vector.x *= -1;
-    this.vector.y *= -1;
-
-    //this.move();
-
-
-    /*float distance = dist(posX, posY, circle[n].posX, circle[n].posY);
-      if (distance < (radius + circle[n].dpSize/2)) {
-        float angle = atan2(circle[n].posY - posY, circle[n].posX - posX);
-        float targetX = posX + cos(angle) * (radius + circle[n].dpSize/2);
-        float targetY = posY + sin(angle) * (radius + circle[n].dpSize/2);
-        float ax = (targetX - circle[n].posX)*2;
-        float ay = (targetY - circle[n].posY)*2;
-        speedX -= ax;
-        speedY -= ay;
-        speedX = speedX*0.8;
-        speedY = speedY*0.8;*/
+    var direc = this.point.subtract(ball.point);
+    //get new speed by multiplying bullet speed * ball speed
+    this.vector = this.vector.add(direc).normalize(this.speed);
 };
 
 
