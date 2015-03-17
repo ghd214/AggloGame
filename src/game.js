@@ -18,39 +18,58 @@ var Agglo = (function(){
 
 	this.init = function(level) {
 		paper.install(window);
-
 		paper.setup('game');
 
 		var tool = new Tool(),
 		    view = paper.project.view,
 		    bullets = [],
 		    lvl = level || 1,
-		    expander = null,
+		    xpr = null,
+		    balls = [],
 		    resize = function(event) {
 			 	view.setViewSize(view.size.width, view.size.width/2);
 			},
 			onMouseDown = function(event) {
-		 		expander = new Expander(event);
+		 		xpr = new Expander(event);
 			},
 			onMouseDrag = function(event) {
-				if(expander) {
-					expander.point = event.point;
+				if(xpr) {
+					xpr.mousePoint = event.point;
 				}
 			},
 			onMouseUp = function(event) {
-			 	expander = null;
+				//create new ball w/ current expander characteristics
+				if(xpr) {
+					balls.push(new Ball(xpr));
+				 	xpr.expander.remove();
+				 	xpr = null;
+				}
 			},
 			onFrame = function() {
+				//bullets
 				for(var i = bullets.length-1; i >= 0; i--) {
-					if(bullets[i].iterate(expander)) {
-						//kill the expander
-						expander = !expander.expander.remove();
+					bullets[i].iterate();
+					if(xpr) {
+						if(bullets[i].itemHit(xpr.expander)) {
+							xpr.expander.remove();
+							xpr = null;
+						}
 					}
 				}
 
+				//balls
+				for(var b = balls.length-1; b >= 0; b--) {
+					balls[b].iterate();
+					for(var n = bullets.length-1; n >= 0; n--) {
+						if(bullets[n].itemHit(balls[b].ball)) {
+							bullets[n].updateVector(balls[b]);
+						}
+					}
+				}
 
-				if(expander) {
-					expander.iterate();
+				//expander
+				if(xpr) {
+					xpr.iterate();
 				}
 			};
 
@@ -73,5 +92,5 @@ var Agglo = (function(){
 }());
 
 window.onload = function() {
-	Agglo.run(2);
+	Agglo.run(5);
 };

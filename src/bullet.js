@@ -1,7 +1,10 @@
+/*
+* Definition for Bullet class
+*/
 function Bullet() {
   this.point = Point.random();
-  this.point.x = this.point.x * view.size.width;
-  this.point.y = this.point.y * view.size.height;
+  this.point.x *= view.size.width;
+  this.point.y *= view.size.height;
 
   this.vector = new Point({
     angle: 360 * Math.random(),
@@ -22,12 +25,12 @@ Bullet.prototype = {
 
 /**
 * Runs every onFrame event
+* @param xpr obj
+* @param balls arr
 */
-Bullet.prototype.iterate = function(item) {
+Bullet.prototype.iterate = function() {
     this.checkBorders();
     this.move();
-    //check if this bullet intersects the item
-    return item !== null ? this.bulletHit(item) : false;
 };
 
 /**
@@ -62,15 +65,25 @@ Bullet.prototype.move = function() {
     this.point.y += this.vector.y;
 
     this.bullet.position = {
-      x:this.point.x,
-      y:this.point.y
+      x: this.point.x,
+      y: this.point.y
     };
+};
+
+/**
+* can update bullet vector from outside object
+*/
+Bullet.prototype.updateVector = function(ball) {
+    var direc = this.point.subtract(ball.point);
+    //get new speed by multiplying bullet speed * ball speed
+    this.vector = this.vector.add(direc).normalize(this.speed);
 };
 
 
 /**
-* Checks for a hit on an expander
+* Checks for a hit on an expander or ball
+* @param item obj
 */
-Bullet.prototype.bulletHit = function(item) {
-    return this.bullet.intersects(item.expander);
+Bullet.prototype.itemHit = function(item) {
+    return this.bullet.intersects(item);
 };

@@ -1,36 +1,23 @@
-function Expander() {
-	var size = view.size;
 /*
-	this.radius = 4;
-	this.point = Point.random();
-	this.point.x = this.point.x * size.width;
-	this.point.y = this.point.y * size.height;
+* Definition for Ball class
+* @param expander obj
+*/
+function Ball(expander) {
+	var xpr = expander;
 
-	this.vector = new Point({
-		angle: 360 * Math.random(),
-		length: speed
-	});
-
-
-	this.circle = new Path.Circle({
-		x: this.point.x,
-		y: this.point.y
-	}, this.radius);
-	this.circle.fillColor = 'red';*/
-
-	this.expander = new Path.Circle({
-					x: event.point.x,
-					y: event.point.y
-				}, 5);
-	expander.fillColor = '#7fddc0';
+  this.point = xpr.mousePoint;
+	this.ball = new Path.Circle({
+					x: this.point.x,
+					y: this.point.y
+				}, xpr.expander.bounds.width / 2);
+	this.ball.strokeColor = '#eee';
+	this.ball.strokeWidth = 1;
 }
 
-Expander.prototype = {
-/*	iterate: function() {
-		this.checkBorders();
-		this.move();
+Ball.prototype = {
+	iterate: function() {
 	},
-	checkBorders: function() {
+	/*checkBorders: function() {
 		size = view.size;
 
 		if(this.point.x < this.radius) {
@@ -59,10 +46,13 @@ Expander.prototype = {
 			y:this.point.y
 		};
 	}*/
-};;function Bullet() {
+};;/*
+* Definition for Bullet class
+*/
+function Bullet() {
   this.point = Point.random();
-  this.point.x = this.point.x * view.size.width;
-  this.point.y = this.point.y * view.size.height;
+  this.point.x *= view.size.width;
+  this.point.y *= view.size.height;
 
   this.vector = new Point({
     angle: 360 * Math.random(),
@@ -83,12 +73,12 @@ Bullet.prototype = {
 
 /**
 * Runs every onFrame event
+* @param xpr obj
+* @param balls arr
 */
-Bullet.prototype.iterate = function(item) {
+Bullet.prototype.iterate = function() {
     this.checkBorders();
     this.move();
-    //check if this bullet intersects the item
-    return item !== null ? this.bulletHit(item) : false;
 };
 
 /**
@@ -123,22 +113,37 @@ Bullet.prototype.move = function() {
     this.point.y += this.vector.y;
 
     this.bullet.position = {
-      x:this.point.x,
-      y:this.point.y
+      x: this.point.x,
+      y: this.point.y
     };
+};
+
+/**
+* can update bullet vector from outside object
+*/
+Bullet.prototype.updateVector = function(ball) {
+    var direc = this.point.subtract(ball.point);
+    //get new speed by multiplying bullet speed * ball speed
+    this.vector = this.vector.add(direc).normalize(this.speed);
 };
 
 
 /**
-* Checks for a hit on an expander
+* Checks for a hit on an expander or ball
+* @param item obj
 */
-Bullet.prototype.bulletHit = function(item) {
-    return this.bullet.intersects(item.expander);
-};;function Expander(event) {
-	this.point = event.point;
+Bullet.prototype.itemHit = function(item) {
+    return this.bullet.intersects(item);
+};;/*
+* class definition for Expander obj
+* @param event Event obj
+*/
+function Expander(event) {
+	this.mousePoint = event.point;
+
 	this.expander = new Path.Circle({
-					x: this.point.x,
-					y: this.point.y
+					x: this.mousePoint.x,
+					y: this.mousePoint.y
 				}, this.initialWidth);
 	//this.expander.fillColor = '#7fddc0';
 	this.expander.strokeColor = '#eee';
@@ -215,7 +220,7 @@ Expander.prototype.reduce = function() {
 * @todo move mouseDrag method inside this class
 */
 Expander.prototype.move = function() {
-	this.expander.position = this.point;
+	this.expander.position = this.mousePoint;
 };
 ;/*EXPANDERS*/
 //@todo expanders *pop* when hit by bullet
@@ -237,39 +242,58 @@ var Agglo = (function(){
 
 	this.init = function(level) {
 		paper.install(window);
-
 		paper.setup('game');
 
 		var tool = new Tool(),
 		    view = paper.project.view,
 		    bullets = [],
 		    lvl = level || 1,
-		    expander = null,
+		    xpr = null,
+		    balls = [],
 		    resize = function(event) {
 			 	view.setViewSize(view.size.width, view.size.width/2);
 			},
 			onMouseDown = function(event) {
-		 		expander = new Expander(event);
+		 		xpr = new Expander(event);
 			},
 			onMouseDrag = function(event) {
-				if(expander) {
-					expander.point = event.point;
+				if(xpr) {
+					xpr.mousePoint = event.point;
 				}
 			},
 			onMouseUp = function(event) {
-			 	expander = null;
+				//create new ball w/ current expander characteristics
+				if(xpr) {
+					balls.push(new Ball(xpr));
+				 	xpr.expander.remove();
+				 	xpr = null;
+				}
 			},
 			onFrame = function() {
+				//bullets
 				for(var i = bullets.length-1; i >= 0; i--) {
-					if(bullets[i].iterate(expander)) {
-						//kill the expander
-						expander = !expander.expander.remove();
+					bullets[i].iterate();
+					if(xpr) {
+						if(bullets[i].itemHit(xpr.expander)) {
+							xpr.expander.remove();
+							xpr = null;
+						}
 					}
 				}
 
+				//balls
+				for(var b = balls.length-1; b >= 0; b--) {
+					balls[b].iterate();
+					for(var n = bullets.length-1; n >= 0; n--) {
+						if(bullets[n].itemHit(balls[b].ball)) {
+							bullets[n].updateVector(balls[b]);
+						}
+					}
+				}
 
-				if(expander) {
-					expander.iterate();
+				//expander
+				if(xpr) {
+					xpr.iterate();
 				}
 			};
 
@@ -292,5 +316,5 @@ var Agglo = (function(){
 }());
 
 window.onload = function() {
-	Agglo.run(2);
+	Agglo.run(5);
 };

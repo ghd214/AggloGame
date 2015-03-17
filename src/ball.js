@@ -1,36 +1,23 @@
-function Expander() {
-	var size = view.size;
 /*
-	this.radius = 4;
-	this.point = Point.random();
-	this.point.x = this.point.x * size.width;
-	this.point.y = this.point.y * size.height;
+* Definition for Ball class
+* @param expander obj
+*/
+function Ball(expander) {
+	var xpr = expander;
 
-	this.vector = new Point({
-		angle: 360 * Math.random(),
-		length: speed
-	});
-
-
-	this.circle = new Path.Circle({
-		x: this.point.x,
-		y: this.point.y
-	}, this.radius);
-	this.circle.fillColor = 'red';*/
-
-	this.expander = new Path.Circle({
-					x: event.point.x,
-					y: event.point.y
-				}, 5);
-	expander.fillColor = '#7fddc0';
+  this.point = xpr.mousePoint;
+	this.ball = new Path.Circle({
+					x: this.point.x,
+					y: this.point.y
+				}, xpr.expander.bounds.width / 2);
+	this.ball.strokeColor = '#eee';
+	this.ball.strokeWidth = 1;
 }
 
-Expander.prototype = {
-/*	iterate: function() {
-		this.checkBorders();
-		this.move();
+Ball.prototype = {
+	iterate: function() {
 	},
-	checkBorders: function() {
+	/*checkBorders: function() {
 		size = view.size;
 
 		if(this.point.x < this.radius) {
