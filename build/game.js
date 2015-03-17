@@ -316,5 +316,5 @@ var Agglo = (function(){
 }());
 
 window.onload = function() {
-	Agglo.run(2);
+	Agglo.run(5);
 };
